@@ -26,7 +26,7 @@
 
     function motor(id) {
       terminal_writeln("motor: " + String(id))
-      sendMotorCmd(get_value("speed")*id, 'a');
+      sendMotorCmd(250*id, 'a');
     }
 
     function sendMotorCmd(speed, channel){
@@ -55,8 +55,8 @@
       <label for="speed">Speed:</label>
       <input type="number" id="speed" name="speed" value="200" step="10">
     </div>
-    <div class="left"><button id="left" ontouchstart="steer(-1)" ontouchend="steer(1)">&larr;</button></div>
-    <div class="right"><button id="right" ontouchstart="steer(1)" ontouchend="steer(-1)">&rarr;</button></div>
+    <div class="left"><button id="left" ontouchstart="steer(1)" ontouchend="steer(-1)">&larr;</button></div>
+    <div class="right"><button id="right" ontouchstart="steer(-1)" ontouchend="steer(1)">&rarr;</button></div>
     <div class="accelerate"><button id="accelerate" ontouchstart="motor(1)" ontouchend="motor(0)">&uarr;</button></div>
     <div class="reverse"><button id="reverse" ontouchstart="motor(-1)" ontouchend="motor(0)">&darr;</button></div>
     <div class="terminal"><textarea id="terminal" rows="10" cols="45"></textarea></div>
