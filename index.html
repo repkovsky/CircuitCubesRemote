@@ -19,14 +19,14 @@
   <script>    
     async function steer(id) {
       terminal_writeln("steer: " + String(id))
-      sendMotorCmd(get_value(speed)*id, 'b')
-      await delay(get_value(interval));
+      sendMotorCmd(get_value("speed")*id, 'b')
+      await delay(get_value("interval"));
       sendMotorCmd(0, 'b')
     }
 
     function motor(id) {
       terminal_writeln("motor: " + String(id))
-      sendMotorCmd(get_value(speed)*id, 'a');
+      sendMotorCmd(get_value("speed")*id, 'a');
     }
 
     function sendMotorCmd(speed, channel){
