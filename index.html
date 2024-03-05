@@ -5,32 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
   <script>
-    async function steer(id) {
-      terminal_writeln("steer: " + String(id))
-      sendMotorCmd(get_value(speed)*id, 'b')
-      await delay(get_value(interval));
-      sendMotorCmd(0, 'b')
-    }
-
-    function motor(id) {
-      terminal_writeln("motor: " + String(id))
-      sendMotorCmd(get_value(speed)*id, 'a')
-    }
-
-    function sendMotorCmd(speed, channel){
-        let cmd = (speed >= 0) ? "+" : ""
-        cmd += String(speed).padStart(3, '0') + channel;
-        nusSendString(cmd)
-    }
-
-    function delay(time) {
-      return new Promise(resolve => setTimeout(resolve, time));
-    }
-
-    function get_value(id){
-      return parseInt(document.getElementById(id).value) 
-    }
-
     function terminal_write(str) {
       var textarea = document.getElementById('terminal');
       textarea.value += str
@@ -42,16 +16,44 @@
     }
   </script>
   <script src="bluetooth.js"></script>
+  <script>    
+    async function steer(id) {
+      terminal_writeln("steer: " + String(id))
+      sendMotorCmd(get_value(speed)*id, 'b')
+      await delay(get_value(interval));
+      sendMotorCmd(0, 'b')
+    }
+
+    function motor(id) {
+      terminal_writeln("motor: " + String(id))
+      sendMotorCmd(get_value(speed)*id, 'a');
+    }
+
+    function sendMotorCmd(speed, channel){
+        let cmd = (speed >= 0) ? "+" : ""
+        cmd += String(speed).padStart(3, '0') + channel;
+        terminal_writeln("sendMotorCmd: " + cmd)
+        nusSendString(cmd);
+    }
+
+    function delay(time) {
+      return new Promise(resolve => setTimeout(resolve, time));
+    }
+
+    function get_value(id){
+      return parseInt(document.getElementById(id).value) 
+    }
+  </script>
 </head>
 <body>
   <div class="container">
     <div class="bluetooth"><button id="clientConnectButton" onmousedown="connectionToggle()">Connect</button></div>
     <div class="values">
       <label for="interval">Interval [ms]:</label>
-      <input type="number" id="interval" name="interval" value="200">
+      <input type="number" id="interval" name="interval" value="200" step="10">
       <br>
       <label for="speed">Speed:</label>
-      <input type="number" id="speed" name="speed" value="200">
+      <input type="number" id="speed" name="speed" value="200" step="10">
     </div>
     <div class="left">
       <button id="left" onmousedown="steer('left')" onmouseup="steer('middle')" 
