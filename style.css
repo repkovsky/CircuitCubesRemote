@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-align: center;
     margin: 20px;
     display: flex;
@@ -29,8 +29,38 @@ button:active {
     filter: brightness(0.7);
 }
 
-input {
-    width: 70px;
+#interval, #speed {
+    font-size: 12px;
+    width: 20px;
+    border: none;
+    text-align: right;
+}
+
+label {
+    width: 5px;
+    padding: 0px;
+}
+
+span {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+#cc {
+    color:#00B8F0
+}
+
+#cb {
+    color: #E1288E
+}
+
+#wr {
+    color: #939498
+}
+
+#settings_container {
+    display: none;
+    font-size: 12px;
 }
 
 #clientConnectButton {
@@ -53,17 +83,27 @@ background-color: #2ecc71;
 color: #fff;
 }
 
+#inc, #dec {
+    font-size: 12px;
+    padding: 3px;
+    margin: 1px;
+    border: 1px solid #3498db;
+}
+
 .container {
     display: grid; 
-    grid-template-columns: 0.75fr 0.75fr 1.5fr; 
-    grid-template-rows: 0.5fr 0.5fr 0.5fr 1fr; 
+    grid-template-columns: 0.5fr 0.5fr 1fr; 
+    grid-template-rows: 0.5fr 0.5fr 0.5fr 0.5fr 2fr; 
     gap: 0px 0px; 
     grid-template-areas:
-      "bluetooth bluetooth values" 
+      "header header header"
       "left right accelerate"
       "left right reverse"
+      "bluetooth bluetooth settings" 
       "terminal terminal terminal"; 
   }
+
+.header { grid-area: header; }
 
 .bluetooth { grid-area: bluetooth; }
 

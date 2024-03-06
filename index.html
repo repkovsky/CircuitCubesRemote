@@ -14,25 +14,41 @@
     function terminal_writeln(str) {
       terminal_write(str + '\n')
     }
+
+    function inc(id){
+      let input = document.getElementById(id);
+      input.value = parseInt(input.value) + 10
+    }
+
+    function dec(id){
+      let input = document.getElementById(id);
+      input.value = parseInt(input.value) - 10
+    }
+
+    function toggleSettings(){
+      let settings_container = document.getElementById("settings_container");
+      if (settings_container.style.display === "block") {
+        settings_container.style.display = "none";
+      } else {
+        settings_container.style.display = "block";
+      }
+    } 
   </script>
   <script src="bluetooth.js"></script>
   <script>    
     async function steer(id) {
-      terminal_writeln("steer: " + String(id))
-      sendMotorCmd(get_value("speed")*id, 'b')
-      await delay(get_value("interval"));
-      sendMotorCmd(0, 'b')
+      sendMotorCmd(getValue("speed")*id, getChannel("steering"))
+      await delay(getValue("interval"));
+      sendMotorCmd(0, getChannel("steering"))
     }
 
-    function motor(id) {
-      terminal_writeln("motor: " + String(id))
-      sendMotorCmd(250*id, 'a');
+    function drive(id) {
+      sendMotorCmd(250*id, getChannel("drive"));
     }
 
     function sendMotorCmd(speed, channel){
         let cmd = (speed >= 0) ? "+" : ""
         cmd += String(speed).padStart(3, '0') + channel;
-        terminal_writeln("sendMotorCmd: " + cmd)
         nusSendString(cmd);
     }
 
@@ -40,26 +56,41 @@
       return new Promise(resolve => setTimeout(resolve, time));
     }
 
-    function get_value(id){
-      return parseInt(document.getElementById(id).value) 
+    function getValue(id){
+      return parseInt(document.getElementById(id).value);
+    }
+
+    function getChannel(name){
+      return document.querySelector( 'input[name="' + name + '"]:checked').value;
     }
   </script>
 </head>
 <body>
   <div class="container">
-    <div class="bluetooth"><button id="clientConnectButton" onmousedown="connectionToggle()">Connect</button></div>
-    <div class="values">
-      <label for="interval">Interval [ms]:</label>
-      <input type="number" id="interval" name="interval" value="200" step="10">
-      <br>
-      <label for="speed">Speed:</label>
-      <input type="number" id="speed" name="speed" value="200" step="10">
+    <div class="header"><span id="cc">CIRCUIT </span><span id="cb">CUBES </span><span id="wr">REMOTE</span></div>
+    <div class="left"><button id="left" ontouchstart="steer(1)" ontouchend="steer(-1)" onmousedown="steer(1)" onmouseup="steer(-1)">&larr;</button></div>
+    <div class="right"><button id="right" ontouchstart="steer(-1)" ontouchend="steer(1)" onmousedown="steer(-1)" onmouseup="steer(1)">&rarr;</button></div>
+    <div class="accelerate"><button id="accelerate" ontouchstart="drive(1)" ontouchend="drive(0)" onmousedown="drive(1)" onmouseup="drive(0)">&uarr;</button></div>
+    <div class="reverse"><button id="reverse" ontouchstart="drive(-1)" ontouchend="drive(0)" onmousedown="drive(-1)" onmouseup="drive(0)">&darr;</button></div>
+    <div class="bluetooth"><button id="clientConnectButton" onclick="connectionToggle()">Connect</button></div>
+    <div class="settings"><button id="settings" onclick="toggleSettings()">Settings</button></div>
+    <div class="terminal">
+      <div id="settings_container">
+        Steering motor runs for <input type="text" id="interval" value="80">ms<button onclick="inc('interval')" id="inc">+</button><button onclick="dec('interval')" id="dec">-</button>
+        with speed <input type="text" id="speed" value="150"><button onclick="inc('speed')" id="inc">+</button><button onclick="dec('speed')" id="dec">-</button>.
+        <br>
+        Steering:
+        <label for="steering"><input type="radio" id="steering" name="steering" value="a" />A</label>
+        <label for="steering"><input type="radio" id="steering" name="steering" value="b" checked/>B</label>
+        <label for="steering"><input type="radio" id="steering" name="steering" value="c" />C</label>  
+        , Drive:  
+        <label for="drive"><input type="radio" id="drive" name="drive" value="a" checked />A</label>
+        <label for="drive"><input type="radio" id="drive" name="drive" value="b" />B</label>
+        <label for="drive"><input type="radio" id="drive" name="drive" value="c" />C</label>       
+        <br>
+        <textarea id="terminal" rows="10" cols="40"></textarea>
+      </div>
     </div>
-    <div class="left"><button id="left" ontouchstart="steer(1)" ontouchend="steer(-1)">&larr;</button></div>
-    <div class="right"><button id="right" ontouchstart="steer(-1)" ontouchend="steer(1)">&rarr;</button></div>
-    <div class="accelerate"><button id="accelerate" ontouchstart="motor(1)" ontouchend="motor(0)">&uarr;</button></div>
-    <div class="reverse"><button id="reverse" ontouchstart="motor(-1)" ontouchend="motor(0)">&darr;</button></div>
-    <div class="terminal"><textarea id="terminal" rows="10" cols="45"></textarea></div>
   </div>
 </body>
 </html>
