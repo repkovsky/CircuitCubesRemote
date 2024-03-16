@@ -36,10 +36,15 @@
   </script>
   <script src="bluetooth.js"></script>
   <script>    
-    async function steer(id) {
+    // async function steer(id) {
+    function steer(id) {
+      const t0 = performance.now();
       sendMotorCmd(getValue("speed")*id, getChannel("steering"))
-      await delay(getValue("interval"));
+      // await delay(getValue("interval"));
+      sleep(getValue("interval"));
       sendMotorCmd(0, getChannel("steering"))
+      const t1 = performance.now();
+      terminal_writeln(`${t1 - t0} ms`);
     }
 
     function drive(id) {
@@ -54,6 +59,10 @@
 
     function delay(time) {
       return new Promise(resolve => setTimeout(resolve, time));
+    }
+
+    function sleep(ms){
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)),0 ,0, ms)
     }
 
     function getValue(id){
