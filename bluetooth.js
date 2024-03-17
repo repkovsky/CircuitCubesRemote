@@ -127,9 +127,9 @@ function handleNotifications(event) {
     terminal_writeln(str);
 }
 
-function nusSendString(s) {
+function nusSendString(s, log=true) {
     if(bleDevice && bleDevice.gatt.connected) {
-        terminal_writeln("send: " + s);
+        if (log) terminal_writeln("send: " + s);
         let val_arr = new Uint8Array(s.length)
         for (let i = 0; i < s.length; i++) {
             let val = s[i].charCodeAt(0);

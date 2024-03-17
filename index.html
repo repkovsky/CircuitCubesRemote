@@ -37,13 +37,15 @@
   <script src="bluetooth.js"></script>
   <script>    
     function steer(id) {
-      const t0 = performance.now();
       const delay = getValue("interval");
-      const channel = getChannel("steering")
-      sendMotorCmd(getValue("speed")*id, channel)
+      const speed = getValue("speed");
+      const channel = getChannel("steering");
+
+      const t0 = performance.now();
+      sendMotorCmd(speed*id, channel)
+      const t1 = performance.now();
       sleep(delay);
       sendMotorCmd(0, channel);
-      const t1 = performance.now();
       terminal_writeln(`${t1 - t0} ms`);
     }
 
