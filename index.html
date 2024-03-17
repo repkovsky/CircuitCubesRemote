@@ -42,7 +42,7 @@
       const channel = getChannel("steering")
       sendMotorCmd(getValue("speed")*id, channel)
       sleep(delay);
-      sendMotorCmd(0, channel)
+      sendMotorCmd(0, channel);
       const t1 = performance.now();
       terminal_writeln(`${t1 - t0} ms`);
     }
@@ -54,7 +54,7 @@
     function sendMotorCmd(speed, channel){
         let cmd = (speed >= 0) ? "+" : ""
         cmd += String(speed).padStart(3, '0') + channel;
-        nusSendString(cmd);
+        nusSendString(cmd, false);
     }
 
     function delay(time) {
@@ -64,7 +64,6 @@
     function sleep(ms){
       const t = performance.now();
       while (performance.now() < t + ms){
-        console.log("w");
       }
     }
 
