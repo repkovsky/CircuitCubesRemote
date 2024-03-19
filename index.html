@@ -66,8 +66,8 @@
 <body>
   <div class="container">
     <div class="header"><span id="cc">CIRCUIT </span><span id="cb">CUBES </span><span id="wr">REMOTE</span></div>
-    <div class="left"><button id="left" ontouchstart="steer(1)" ontouchend="steer(-1)" onmousedown="steer(1)" onmouseup="steer(-1)">&larr;</button></div>
-    <div class="right"><button id="right" ontouchstart="steer(-1)" ontouchend="steer(1)" onmousedown="steer(-1)" onmouseup="steer(1)">&rarr;</button></div>
+    <div class="left"><button id="left" ontouchstart="steer(1)" ontouchend="steer(0)" onmousedown="steer(1)" onmouseup="steer(0)">&larr;</button></div>
+    <div class="right"><button id="right" ontouchstart="steer(-1)" ontouchend="steer(0)" onmousedown="steer(-1)" onmouseup="steer(0)">&rarr;</button></div>
     <div class="accelerate"><button id="accelerate" ontouchstart="drive(1)" ontouchend="drive(0)" onmousedown="drive(1)" onmouseup="drive(0)">&uarr;</button></div>
     <div class="reverse"><button id="reverse" ontouchstart="drive(-1)" ontouchend="drive(0)" onmousedown="drive(-1)" onmouseup="drive(0)">&darr;</button></div>
     <div class="bluetooth"><button id="clientConnectButton" onclick="connectionToggle()">Connect</button></div>
@@ -85,9 +85,8 @@
         <label for="drive"><input type="radio" id="drive" name="drive" value="c" />C</label>       
         <br>
         <textarea id="terminal" rows="10" cols="40"></textarea>
-        <br>
-        v0.1.2
       </div>
+      <p id="version">v0.1.3</p>
     </div>
   </div>
 </body>

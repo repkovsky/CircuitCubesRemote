@@ -64,6 +64,10 @@ span {
     font-size: 12px;
 }
 
+#version {
+    font-size: 10px;
+}
+
 #clientConnectButton {
 background-color: #3498db;
 color: #fff;
