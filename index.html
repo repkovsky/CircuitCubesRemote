@@ -57,7 +57,7 @@
     function sendMotorCmd(speed, channel){
         let cmd = (speed >= 0) ? "+" : ""
         cmd += String(speed).padStart(3, '0') + channel;
-        nusSendString(cmd, false);
+        nusSendString(cmd, true);
     }
 
     function delay(time) {
@@ -103,6 +103,8 @@
         <label for="drive"><input type="radio" id="drive" name="drive" value="c" />C</label>       
         <br>
         <textarea id="terminal" rows="10" cols="40"></textarea>
+        <br>
+        v0.1.1
       </div>
     </div>
   </div>
