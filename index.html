@@ -37,37 +37,21 @@
   <script src="bluetooth.js"></script>
   <script>    
     function steer(id) {
-      const delay = getValue("interval");
-      const speed = getValue("speed");
+      const speed = getValue("steer_speed");
       const channel = getChannel("steering");
-
-      const t0 = performance.now();
       sendMotorCmd(speed*id, channel)
-      const t1 = performance.now();
-      sleep(delay);
-      sendMotorCmd(0, channel);
-      terminal_writeln(`${t1 - t0} ms`);
     }
 
     function drive(id) {
-      const speed = getValue("speed");
-      sendMotorCmd(speed*id, getChannel("drive"));
+      const speed = getValue("drive_speed");
+      const channel = getChannel("drive");
+      sendMotorCmd(speed*id, channel);
     }
 
     function sendMotorCmd(speed, channel){
         let cmd = (speed >= 0) ? "+" : ""
         cmd += String(speed).padStart(3, '0') + channel;
         nusSendString(cmd, true);
-    }
-
-    function delay(time) {
-      return new Promise(resolve => setTimeout(resolve, time));
-    }
-
-    function sleep(ms){
-      const t = performance.now();
-      while (performance.now() < t + ms){
-      }
     }
 
     function getValue(id){
@@ -90,21 +74,19 @@
     <div class="settings"><button id="settings" onclick="toggleSettings()">Settings</button></div>
     <div class="terminal">
       <div id="settings_container">
-        Steering motor runs for <input type="text" id="interval" value="80">ms<button onclick="inc('interval')" id="inc">+</button><button onclick="dec('interval')" id="dec">-</button>
-        with speed <input type="text" id="speed" value="150"><button onclick="inc('speed')" id="inc">+</button><button onclick="dec('speed')" id="dec">-</button>.
-        <br>
-        Steering:
+        Steering motor speed <input type="text" id="steer_speed" value="80"><button onclick="inc('steer_speed')" id="inc">+</button><button onclick="dec('steer_speed')" id="dec">-</button>
         <label for="steering"><input type="radio" id="steering" name="steering" value="a" />A</label>
         <label for="steering"><input type="radio" id="steering" name="steering" value="b" checked/>B</label>
-        <label for="steering"><input type="radio" id="steering" name="steering" value="c" />C</label>  
-        , Drive:  
+        <label for="steering"><input type="radio" id="steering" name="steering" value="c" />C</label>
+        <br>
+        Drive motor speed <input type="text" id="drive_speed" value="150"><button onclick="inc('drive_speed')" id="inc">+</button><button onclick="dec('drive_speed')" id="dec">-</button>
         <label for="drive"><input type="radio" id="drive" name="drive" value="a" checked />A</label>
         <label for="drive"><input type="radio" id="drive" name="drive" value="b" />B</label>
         <label for="drive"><input type="radio" id="drive" name="drive" value="c" />C</label>       
         <br>
         <textarea id="terminal" rows="10" cols="40"></textarea>
         <br>
-        v0.1.1
+        v0.1.2
       </div>
     </div>
   </div>
