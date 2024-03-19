@@ -50,7 +50,8 @@
     }
 
     function drive(id) {
-      sendMotorCmd(250*id, getChannel("drive"));
+      const speed = getValue("speed");
+      sendMotorCmd(speed*id, getChannel("drive"));
     }
 
     function sendMotorCmd(speed, channel){
