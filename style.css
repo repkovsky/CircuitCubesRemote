@@ -90,9 +90,10 @@ color: #fff;
 
 #inc, #dec {
     font-size: 12px;
-    padding: 3px;
+    padding: 2px;
     margin: 1px;
     border: 1px solid #3498db;
+    width: 15px;
 }
 
 .container {

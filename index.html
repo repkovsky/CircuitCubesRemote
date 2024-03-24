@@ -4,48 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-  <script>
-    function terminal_write(str) {
-      var textarea = document.getElementById('terminal');
-      textarea.value += str
-      textarea.scrollTop = textarea.scrollHeight;
-    }
-
-    function terminal_writeln(str) {
-      terminal_write(str + '\n')
-    }
-
-    function inc(id){
-      let input = document.getElementById(id);
-      input.value = parseInt(input.value) + 10
-    }
-
-    function dec(id){
-      let input = document.getElementById(id);
-      input.value = parseInt(input.value) - 10
-    }
-
-    function toggleSettings(){
-      let settings_container = document.getElementById("settings_container");
-      if (settings_container.style.display === "block") {
-        settings_container.style.display = "none";
-      } else {
-        settings_container.style.display = "block";
-      }
-    } 
-  </script>
+  <script src="interface.js"></script>
   <script src="bluetooth.js"></script>
   <script>    
     function steer(id) {
       const speed = getValue("steer_speed");
-      const channel = getChannel("steering");
-      sendMotorCmd(speed*id, channel)
+      const channel = getChannel("steer_channel");
+      const invert = getInversion("steer_invert");
+      sendMotorCmd(speed*id*invert, channel)
     }
 
     function drive(id) {
       const speed = getValue("drive_speed");
-      const channel = getChannel("drive");
-      sendMotorCmd(speed*id, channel);
+      const channel = getChannel("drive_channel");
+      const invert = getInversion("drive_invert");
+      sendMotorCmd(speed*id*invert, channel);
     }
 
     function sendMotorCmd(speed, channel){
@@ -59,11 +32,15 @@
     }
 
     function getChannel(name){
-      return document.querySelector( 'input[name="' + name + '"]:checked').value;
+      return document.querySelector('input[name="' + name + '"]:checked').value;
+    }
+
+    function getInversion(id){
+      return (document.getElementById(id).checked) ? -1 : 1;
     }
   </script>
 </head>
-<body>
+<body onload="onLoad()">
   <div class="container">
     <div class="header"><span id="cc">CIRCUIT </span><span id="cb">CUBES </span><span id="wr">REMOTE</span></div>
     <div class="left"><button id="left" ontouchstart="steer(1)" ontouchend="steer(0)" onmousedown="steer(1)" onmouseup="steer(0)">&larr;</button></div>
@@ -74,19 +51,23 @@
     <div class="settings"><button id="settings" onclick="toggleSettings()">Settings</button></div>
     <div class="terminal">
       <div id="settings_container">
-        Steering motor speed <input type="text" id="steer_speed" value="80"><button onclick="inc('steer_speed')" id="inc">+</button><button onclick="dec('steer_speed')" id="dec">-</button>
-        <label for="steering"><input type="radio" id="steering" name="steering" value="a" />A</label>
-        <label for="steering"><input type="radio" id="steering" name="steering" value="b" checked/>B</label>
-        <label for="steering"><input type="radio" id="steering" name="steering" value="c" />C</label>
+        Steering speed <input type="text" id="steer_speed" value="80">
+        <button onclick="inc('steer_speed')" id="inc">+</button><button onclick="dec('steer_speed')" id="dec">-</button>
+        <label for="steer_invert"><input id="steer_invert" name="steer_invert" type="checkbox">invert</label>,
+        <label for="steer_channel"><input type="radio" name="steer_channel" value="a" />A</label>
+        <label for="steer_channel"><input type="radio" name="steer_channel" value="b" checked />B</label>
+        <label for="steer_channel"><input type="radio" name="steer_channel" value="c" />C</label>
         <br>
-        Drive motor speed <input type="text" id="drive_speed" value="150"><button onclick="inc('drive_speed')" id="inc">+</button><button onclick="dec('drive_speed')" id="dec">-</button>
-        <label for="drive"><input type="radio" id="drive" name="drive" value="a" checked />A</label>
-        <label for="drive"><input type="radio" id="drive" name="drive" value="b" />B</label>
-        <label for="drive"><input type="radio" id="drive" name="drive" value="c" />C</label>       
+        Drive speed <input type="text" id="drive_speed" value="150">
+        <button onclick="inc('drive_speed')" id="inc">+</button><button onclick="dec('drive_speed')" id="dec">-</button>
+        <label for="drive_invert"><input id="drive_invert" name="drive_invert" type="checkbox">invert</label>,
+        <label for="drive_channel"><input type="radio" name="drive_channel" value="a" checked />A</label>
+        <label for="drive_channel"><input type="radio" name="drive_channel" value="b" />B</label>
+        <label for="drive_channel"><input type="radio" name="drive_channel" value="c" />C</label>  
         <br>
         <textarea id="terminal" rows="10" cols="40"></textarea>
       </div>
-      <p id="version">v0.1.3</p>
+      <p id="version">v0.1.4</p>
     </div>
   </div>
 </body>
