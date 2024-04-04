@@ -25,12 +25,12 @@
       }
     }
 
-    function steer(id) {
-      run_motor(id, "steer");
+    async function steer(id) {
+      await run_motor(id, "steer");
     }
 
-    function drive(id) {
-      run_motor(id, "drive");
+    async function drive(id) {
+      await run_motor(id, "drive");
     }
 
     async function sendMotorCmd(speed, channel){
@@ -82,7 +82,7 @@
         <br>
         <textarea id="terminal" rows="10" cols="40" readonly></textarea>
       </div>
-      <p id="version">v0.1.5</p>
+      <p id="version">v0.1.6</p>
     </div>
   </div>
 </body>
