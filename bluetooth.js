@@ -12,6 +12,7 @@ var rxCharacteristic;
 var txCharacteristic;
 
 var connected = false;
+var bleBusy = false;
 
 function connectionToggle() {
     if (connected) {
@@ -128,13 +129,14 @@ function handleNotifications(event) {
 }
 
 function nusSendString(s, log=true) {
-    if(bleDevice && bleDevice.gatt.connected) {
+    if (bleDevice && bleDevice.gatt.connected) {
         if (log) terminal_writeln("send: " + s);
         let val_arr = new Uint8Array(s.length)
         for (let i = 0; i < s.length; i++) {
             let val = s[i].charCodeAt(0);
             val_arr[i] = val;
         }
+        bleBusy = true;
         sendNextChunk(val_arr);
     } else {
         terminal_writeln('Not connected to a device yet.');
@@ -144,9 +146,11 @@ function nusSendString(s, log=true) {
 function sendNextChunk(a) {
     let chunk = a.slice(0, MTU);
     rxCharacteristic.writeValue(chunk)
-      .then(function() {
-          if (a.length > MTU) {
-              sendNextChunk(a.slice(MTU));
-          }
-      });
+        .then(function() {
+            if (a.length > MTU) {
+                sendNextChunk(a.slice(MTU));
+            } else {
+                bleBusy = false;
+            }
+        });
 }

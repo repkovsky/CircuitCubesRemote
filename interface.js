@@ -5,6 +5,10 @@ const radiobuttons =  ["steer_channel", "drive_channel"];
 const COOKIE_EXT_DAYS = 364;
 const COOKIE_PREFIX = "circuit_cube_";
 
+function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
 function terminal_write(str) {
   var textarea = document.getElementById('terminal');
   textarea.value += str;
@@ -17,7 +21,7 @@ function terminal_writeln(str) {
 
 function inc(id){
   let input = document.getElementById(id);
-  input.value = parseInt(input.value) + 10
+  input.value = Math.min(parseInt(input.value) + 10, 250);
   input.onchange();
 }
 

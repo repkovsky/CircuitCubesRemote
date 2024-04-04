@@ -6,6 +6,7 @@ body {
     justify-content: space-around;
     align-items: center;
     height: 100vh;
+    user-select: none;
 }
 
 .left-right-buttons, .accelerate-reverse-buttons {
@@ -22,11 +23,14 @@ button {
     border: none;
     border-radius: 5px;
     transition: filter 0.3s;
-    user-select: none;
 }
 
 button:active {
     filter: brightness(0.7);
+}
+
+input:disabled {
+    color: black;
 }
 
 #steer_speed, #drive_speed {

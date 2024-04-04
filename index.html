@@ -2,28 +2,43 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CircuitCubeRemote</title>
   <link rel="stylesheet" href="style.css">
   <script src="interface.js"></script>
   <script src="bluetooth.js"></script>
-  <script>    
+  <script>
+    var pressTime = 0;
+
+    async function run_motor(id, motor) {
+      const speed = getValue(motor + "_speed");
+      const channel = getChannel(motor + "_channel");
+      const invert = getInversion(motor + "_invert");
+      await sendMotorCmd(speed*id*invert, channel);
+      if (id == 0) {
+        terminal_writeln(parseInt(performance.now() - pressTime));
+      } else {
+        pressTime = performance.now();
+      }
+    }
+
     function steer(id) {
-      const speed = getValue("steer_speed");
-      const channel = getChannel("steer_channel");
-      const invert = getInversion("steer_invert");
-      sendMotorCmd(speed*id*invert, channel)
+      run_motor(id, "steer");
     }
 
     function drive(id) {
-      const speed = getValue("drive_speed");
-      const channel = getChannel("drive_channel");
-      const invert = getInversion("drive_invert");
-      sendMotorCmd(speed*id*invert, channel);
+      run_motor(id, "drive");
     }
 
-    function sendMotorCmd(speed, channel){
+    async function sendMotorCmd(speed, channel){
         let cmd = (speed >= 0) ? "+" : ""
         cmd += String(speed).padStart(3, '0') + channel;
+        while (bleBusy == true) {
+          await delay(1);
+        }
         nusSendString(cmd, true);
     }
 
@@ -51,23 +66,23 @@
     <div class="settings"><button id="settings" onclick="toggleSettings()">Settings</button></div>
     <div class="terminal">
       <div id="settings_container">
-        Steering speed <input type="text" id="steer_speed" value="80">
+        Steering speed <input type="text" id="steer_speed" value="100" disabled>
         <button onclick="inc('steer_speed')" id="inc">+</button><button onclick="dec('steer_speed')" id="dec">-</button>
         <label for="steer_invert"><input id="steer_invert" name="steer_invert" type="checkbox">invert</label>,
         <label for="steer_channel"><input type="radio" name="steer_channel" value="a" />A</label>
         <label for="steer_channel"><input type="radio" name="steer_channel" value="b" checked />B</label>
         <label for="steer_channel"><input type="radio" name="steer_channel" value="c" />C</label>
         <br>
-        Drive speed <input type="text" id="drive_speed" value="150">
+        Drive speed <input type="text" id="drive_speed" value="250" disabled>
         <button onclick="inc('drive_speed')" id="inc">+</button><button onclick="dec('drive_speed')" id="dec">-</button>
         <label for="drive_invert"><input id="drive_invert" name="drive_invert" type="checkbox">invert</label>,
         <label for="drive_channel"><input type="radio" name="drive_channel" value="a" checked />A</label>
         <label for="drive_channel"><input type="radio" name="drive_channel" value="b" />B</label>
         <label for="drive_channel"><input type="radio" name="drive_channel" value="c" />C</label>  
         <br>
-        <textarea id="terminal" rows="10" cols="40"></textarea>
+        <textarea id="terminal" rows="10" cols="40" readonly></textarea>
       </div>
-      <p id="version">v0.1.4</p>
+      <p id="version">v0.1.5</p>
     </div>
   </div>
 </body>
