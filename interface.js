@@ -2,6 +2,8 @@
 const checkboxes =    ["steer_invert",  "drive_invert"];
 const values =        ["steer_speed",   "drive_speed"];
 const radiobuttons =  ["steer_channel", "drive_channel"];
+const steerbuttons =  ["left", "right"];
+const drivebuttons =  ["accelerate", "reverse"];
 const COOKIE_EXT_DAYS = 364;
 const COOKIE_PREFIX = "circuit_cube_";
 
@@ -71,6 +73,14 @@ function onSetup(){
   });
   radiobuttons.forEach(name => {
     setCookie(COOKIE_PREFIX + name, document.querySelector(`input[name="${name}"]:checked`).value);
+  });
+  steerbuttons.forEach(id => {
+      let el = document.getElementById(id);
+      el.addEventListener("touchend", stopSteerHandler);
+  });
+  drivebuttons.forEach(id => {
+    let el = document.getElementById(id);
+    el.addEventListener("touchend", stopDriveHandler);
   });
 }
 

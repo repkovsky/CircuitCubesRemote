@@ -33,7 +33,7 @@ input:disabled {
     color: black;
 }
 
-#steer_speed, #drive_speed {
+#steer_speed, #drive_speed, #interval {
     font-size: 12px;
     width: 20px;
     border: none;
@@ -64,7 +64,7 @@ span {
 
 #settings_container {
     display: none;
-    text-align: right;
+    text-align: left;
     font-size: 12px;
 }
 

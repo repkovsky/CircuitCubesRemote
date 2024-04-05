@@ -12,25 +12,27 @@
   <script src="bluetooth.js"></script>
   <script>
     var pressTime = 0;
+    var lastDirection = 0;
 
-    async function run_motor(id, motor) {
+    async function run_motor(direction, motor) {
       const speed = getValue(motor + "_speed");
       const channel = getChannel(motor + "_channel");
       const invert = getInversion(motor + "_invert");
-      await sendMotorCmd(speed*id*invert, channel);
-      if (id == 0) {
+      await sendMotorCmd(speed*direction*invert, channel);
+      if (direction == 0) {
         terminal_writeln(parseInt(performance.now() - pressTime));
       } else {
         pressTime = performance.now();
       }
     }
 
-    function steer(id) {
-      run_motor(id, "steer");
+    function steer(direction) {
+      lastDirection = direction;
+      run_motor(direction, "steer");
     }
 
-    function drive(id) {
-      run_motor(id, "drive");
+    function drive(direction) {
+      run_motor(direction, "drive");
     }
 
     async function sendMotorCmd(speed, channel){
@@ -56,12 +58,21 @@
 
     function stopDriveHandler(e){
       e.preventDefault();
-      drive(0);
+      steer(0);
     }
 
-    function stopSteerHandler(e){
+    async function stopSteerHandler(e){
       e.preventDefault();
-      steer(0);
+      const elapsed = performance.now() - pressTime;
+      const centering = document.getElementById("centering").checked;
+      if (elapsed > 100 && centering) {
+        const interval = getValue("interval");
+        steer(-lastDirection);
+        await delay(interval)
+        steer(0);
+      } else {
+        steer(0);
+      }
     }
   </script>
 </head>
@@ -76,13 +87,6 @@
     <div class="settings"><button id="settings" onclick="toggleSettings()">Settings</button></div>
     <div class="terminal">
       <div id="settings_container">
-        Steering speed <input type="text" id="steer_speed" value="100" disabled>
-        <button onclick="inc('steer_speed')" id="inc">+</button><button onclick="dec('steer_speed')" id="dec">-</button>
-        <label for="steer_invert"><input id="steer_invert" name="steer_invert" type="checkbox">invert</label>,
-        <label for="steer_channel_a"><input type="radio" name="steer_channel" id="steer_channel_a" value="a" />A</label>
-        <label for="steer_channel_b"><input type="radio" name="steer_channel" id="steer_channel_b" value="b" checked />B</label>
-        <label for="steer_channel_c"><input type="radio" name="steer_channel" id="steer_channel_c" value="c" />C</label>
-        <br>
         Drive speed <input type="text" id="drive_speed" value="250" disabled>
         <button onclick="inc('drive_speed')" id="inc">+</button><button onclick="dec('drive_speed')" id="dec">-</button>
         <label for="drive_invert"><input id="drive_invert" name="drive_invert" type="checkbox">invert</label>,
@@ -90,20 +94,21 @@
         <label for="drive_channel_b"><input type="radio" name="drive_channel" id="drive_channel_b" value="b" />B</label>
         <label for="drive_channel_b"><input type="radio" name="drive_channel" id="drive_channel_c" value="c" />C</label>  
         <br>
+        Steer speed <input type="text" id="steer_speed" value="100" disabled>
+        <button onclick="inc('steer_speed')" id="inc">+</button><button onclick="dec('steer_speed')" id="dec">-</button>
+        <label for="steer_invert"><input id="steer_invert" name="steer_invert" type="checkbox">invert</label>,
+        <label for="steer_channel_a"><input type="radio" name="steer_channel" id="steer_channel_a" value="a" />A</label>
+        <label for="steer_channel_b"><input type="radio" name="steer_channel" id="steer_channel_b" value="b" checked />B</label>
+        <label for="steer_channel_c"><input type="radio" name="steer_channel" id="steer_channel_c" value="c" />C</label>
+        <br>
+        Return to center <input type="text" id="interval" value="200" disabled>ms
+        <button onclick="inc('interval')" id="inc">+</button><button onclick="dec('interval')" id="dec">-</button>
+        <label for="centering"><input id="centering" name="centering" type="checkbox">enabled</label>
+        <br>
         <textarea id="terminal" rows="10" cols="40" readonly></textarea>
       </div>
-      <p id="version">v0.1.7</p>
+      <p id="version">v0.1.8</p>
     </div>
   </div>
-  <script>
-    ["left", "right"].forEach(id => {
-        let el = document.getElementById(id);
-        el.addEventListener("touchend", stopSteerHandler);
-    });
-    ["accelerate", "reverse"].forEach(id => {
-      let el = document.getElementById(id);
-      el.addEventListener("touchend", stopDriveHandler);
-    });
-  </script>
 </body>
 </html>
