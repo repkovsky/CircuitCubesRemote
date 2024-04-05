@@ -25,12 +25,12 @@
       }
     }
 
-    async function steer(id) {
-      await run_motor(id, "steer");
+    function steer(id) {
+      run_motor(id, "steer");
     }
 
-    async function drive(id) {
-      await run_motor(id, "drive");
+    function drive(id) {
+      run_motor(id, "drive");
     }
 
     async function sendMotorCmd(speed, channel){
@@ -53,15 +53,25 @@
     function getInversion(id){
       return (document.getElementById(id).checked) ? -1 : 1;
     }
+
+    function stopDriveHandler(e){
+      e.preventDefault();
+      drive(0);
+    }
+
+    function stopSteerHandler(e){
+      e.preventDefault();
+      steer(0);
+    }
   </script>
 </head>
 <body onload="onLoad()">
   <div class="container">
     <div class="header"><span id="cc">CIRCUIT </span><span id="cb">CUBES </span><span id="wr">REMOTE</span></div>
-    <div class="left"><button id="left" ontouchstart="steer(1)" ontouchend="steer(0)" onmousedown="steer(1)" onmouseup="steer(0)">&larr;</button></div>
-    <div class="right"><button id="right" ontouchstart="steer(-1)" ontouchend="steer(0)" onmousedown="steer(-1)" onmouseup="steer(0)">&rarr;</button></div>
-    <div class="accelerate"><button id="accelerate" ontouchstart="drive(1)" ontouchend="drive(0)" onmousedown="drive(1)" onmouseup="drive(0)">&uarr;</button></div>
-    <div class="reverse"><button id="reverse" ontouchstart="drive(-1)" ontouchend="drive(0)" onmousedown="drive(-1)" onmouseup="drive(0)">&darr;</button></div>
+    <div class="left"><button id="left" ontouchstart="steer(1)" onmousedown="steer(1)" onmouseup="steer(0)">&larr;</button></div>
+    <div class="right"><button id="right" ontouchstart="steer(-1)" onmousedown="steer(-1)" onmouseup="steer(0)">&rarr;</button></div>
+    <div class="accelerate"><button id="accelerate" ontouchstart="drive(1)" onmousedown="drive(1)" onmouseup="drive(0)">&uarr;</button></div>
+    <div class="reverse"><button id="reverse" ontouchstart="drive(-1)" onmousedown="drive(-1)" onmouseup="drive(0)">&darr;</button></div>
     <div class="bluetooth"><button id="clientConnectButton" onclick="connectionToggle()">Connect</button></div>
     <div class="settings"><button id="settings" onclick="toggleSettings()">Settings</button></div>
     <div class="terminal">
@@ -69,21 +79,31 @@
         Steering speed <input type="text" id="steer_speed" value="100" disabled>
         <button onclick="inc('steer_speed')" id="inc">+</button><button onclick="dec('steer_speed')" id="dec">-</button>
         <label for="steer_invert"><input id="steer_invert" name="steer_invert" type="checkbox">invert</label>,
-        <label for="steer_channel"><input type="radio" name="steer_channel" value="a" />A</label>
-        <label for="steer_channel"><input type="radio" name="steer_channel" value="b" checked />B</label>
-        <label for="steer_channel"><input type="radio" name="steer_channel" value="c" />C</label>
+        <label for="steer_channel_a"><input type="radio" name="steer_channel" id="steer_channel_a" value="a" />A</label>
+        <label for="steer_channel_b"><input type="radio" name="steer_channel" id="steer_channel_b" value="b" checked />B</label>
+        <label for="steer_channel_c"><input type="radio" name="steer_channel" id="steer_channel_c" value="c" />C</label>
         <br>
         Drive speed <input type="text" id="drive_speed" value="250" disabled>
         <button onclick="inc('drive_speed')" id="inc">+</button><button onclick="dec('drive_speed')" id="dec">-</button>
         <label for="drive_invert"><input id="drive_invert" name="drive_invert" type="checkbox">invert</label>,
-        <label for="drive_channel"><input type="radio" name="drive_channel" value="a" checked />A</label>
-        <label for="drive_channel"><input type="radio" name="drive_channel" value="b" />B</label>
-        <label for="drive_channel"><input type="radio" name="drive_channel" value="c" />C</label>  
+        <label for="drive_channel_a"><input type="radio" name="drive_channel" id="drive_channel_a" value="a" checked />A</label>
+        <label for="drive_channel_b"><input type="radio" name="drive_channel" id="drive_channel_b" value="b" />B</label>
+        <label for="drive_channel_b"><input type="radio" name="drive_channel" id="drive_channel_c" value="c" />C</label>  
         <br>
         <textarea id="terminal" rows="10" cols="40" readonly></textarea>
       </div>
-      <p id="version">v0.1.6</p>
+      <p id="version">v0.1.7</p>
     </div>
   </div>
+  <script>
+    ["left", "right"].forEach(id => {
+        let el = document.getElementById(id);
+        el.addEventListener("touchend", stopSteerHandler);
+    });
+    ["accelerate", "reverse"].forEach(id => {
+      let el = document.getElementById(id);
+      el.addEventListener("touchend", stopDriveHandler);
+    });
+  </script>
 </body>
 </html>
