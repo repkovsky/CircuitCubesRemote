@@ -73,23 +73,26 @@ span {
 }
 
 #clientConnectButton {
-background-color: #3498db;
-color: #fff;
+    background-color: #3498db;
+    color: #fff;
 }
 
 #left, #right {
-background-color: #ffbf00;
-color: #fff;
+    background-color: #ffbf00;
 }
 
-#accelerate {
-background-color: #2ecc71;
-color: #fff;
+#accelerate, #reverse {
+    background-color: #2ecc71;
 }
 
-#reverse {
-background-color: #2ecc71;
-color: #fff;
+#left, #right, #accelerate, #reverse {
+    font-family: Calibri;
+    font-weight: bold;
+    font-size: 18px;
+    width: 50px;
+    text-align: center;
+    padding: 8px;
+    color: #fff;
 }
 
 #inc, #dec {
@@ -128,4 +131,3 @@ color: #fff;
 .reverse { grid-area: reverse; }
 
 .terminal { grid-area: terminal; }  
-

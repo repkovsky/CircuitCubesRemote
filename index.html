@@ -1,114 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CircuitCubeRemote</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="interface.js"></script>
-  <script src="bluetooth.js"></script>
-  <script>
-    var pressTime = 0;
-    var lastDirection = 0;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CircuitCubeRemote</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="interface.js"></script>
+    <script src="bluetooth.js"></script>
+    <script>
+        var pressTime = 0;
+        var lastDirection = 0;
+        var touchScreen = false;
 
-    async function run_motor(direction, motor) {
-      const speed = getValue(motor + "_speed");
-      const channel = getChannel(motor + "_channel");
-      const invert = getInversion(motor + "_invert");
-      await sendMotorCmd(speed*direction*invert, channel);
-      if (direction == 0) {
-        terminal_writeln(parseInt(performance.now() - pressTime));
-      } else {
-        pressTime = performance.now();
-      }
-    }
-
-    function steer(direction) {
-      lastDirection = direction;
-      run_motor(direction, "steer");
-    }
-
-    function drive(direction) {
-      run_motor(direction, "drive");
-    }
-
-    async function sendMotorCmd(speed, channel){
-        let cmd = (speed >= 0) ? "+" : ""
-        cmd += String(speed).padStart(3, '0') + channel;
-        while (bleBusy == true) {
-          await delay(1);
+        async function run_motor(direction, motor) {
+            const speed = getValue(motor + "_speed");
+            const channel = getChannel(motor + "_channel");
+            const invert = getInversion(motor + "_invert");
+            await sendMotorCmd(speed*direction*invert, channel);
         }
-        nusSendString(cmd, true);
-    }
 
-    function getValue(id){
-      return parseInt(document.getElementById(id).value);
-    }
+        async function steer(direction, touch=true) {
+            if (alreadyTouched(touch)) return;
+            if (direction == 0) {
+                const centering = document.getElementById("centering").checked;
+                const elapsed = performance.now() - pressTime;
+                terminal_writeln("steer pressed for " + parseInt(elapsed) + "ms");
+                if (centering) {
+                    const interval = getValue("interval");
+                    run_motor(-lastDirection, "steer");
+                    await delay(Math.min(interval, elapsed));
+                    run_motor(0, "steer");
+                    terminal_writeln("returned to center for " + parseInt(performance.now() - pressTime - elapsed) + "ms");
+                } else {
+                    run_motor(0, "steer");
+                }
+            } else {
+                lastDirection = direction;
+                run_motor(direction, "steer");
+                pressTime = performance.now();
+            }
+        }
 
-    function getChannel(name){
-      return document.querySelector('input[name="' + name + '"]:checked').value;
-    }
+        function drive(direction, touch=true) {
+            if (alreadyTouched(touch)) return;
+            run_motor(direction, "drive");
+        }
 
-    function getInversion(id){
-      return (document.getElementById(id).checked) ? -1 : 1;
-    }
+        async function sendMotorCmd(speed, channel){
+            let cmd = (speed >= 0) ? "+" : ""
+            cmd += String(speed).padStart(3, '0') + channel;
+            while (bleBusy == true) {
+                await delay(1);
+            }
+            nusSendString(cmd, true);
+        }
 
-    function stopDriveHandler(e){
-      e.preventDefault();
-      steer(0);
-    }
+        function getValue(id){
+            return parseInt(document.getElementById(id).value);
+        }
 
-    async function stopSteerHandler(e){
-      e.preventDefault();
-      const elapsed = performance.now() - pressTime;
-      const centering = document.getElementById("centering").checked;
-      if (elapsed > 100 && centering) {
-        const interval = getValue("interval");
-        steer(-lastDirection);
-        await delay(interval)
-        steer(0);
-      } else {
-        steer(0);
-      }
-    }
-  </script>
+        function getChannel(name){
+            return document.querySelector('input[name="' + name + '"]:checked').value;
+        }
+
+        function getInversion(id){
+            return (document.getElementById(id).checked) ? -1 : 1;
+        }
+    </script>
 </head>
 <body onload="onLoad()">
-  <div class="container">
-    <div class="header"><span id="cc">CIRCUIT </span><span id="cb">CUBES </span><span id="wr">REMOTE</span></div>
-    <div class="left"><button id="left" ontouchstart="steer(1)" onmousedown="steer(1)" onmouseup="steer(0)">&larr;</button></div>
-    <div class="right"><button id="right" ontouchstart="steer(-1)" onmousedown="steer(-1)" onmouseup="steer(0)">&rarr;</button></div>
-    <div class="accelerate"><button id="accelerate" ontouchstart="drive(1)" onmousedown="drive(1)" onmouseup="drive(0)">&uarr;</button></div>
-    <div class="reverse"><button id="reverse" ontouchstart="drive(-1)" onmousedown="drive(-1)" onmouseup="drive(0)">&darr;</button></div>
-    <div class="bluetooth"><button id="clientConnectButton" onclick="connectionToggle()">Connect</button></div>
-    <div class="settings"><button id="settings" onclick="toggleSettings()">Settings</button></div>
-    <div class="terminal">
-      <div id="settings_container">
-        Drive speed <input type="text" id="drive_speed" value="250" disabled>
-        <button onclick="inc('drive_speed')" id="inc">+</button><button onclick="dec('drive_speed')" id="dec">-</button>
-        <label for="drive_invert"><input id="drive_invert" name="drive_invert" type="checkbox">invert</label>,
-        <label for="drive_channel_a"><input type="radio" name="drive_channel" id="drive_channel_a" value="a" checked />A</label>
-        <label for="drive_channel_b"><input type="radio" name="drive_channel" id="drive_channel_b" value="b" />B</label>
-        <label for="drive_channel_b"><input type="radio" name="drive_channel" id="drive_channel_c" value="c" />C</label>  
-        <br>
-        Steer speed <input type="text" id="steer_speed" value="100" disabled>
-        <button onclick="inc('steer_speed')" id="inc">+</button><button onclick="dec('steer_speed')" id="dec">-</button>
-        <label for="steer_invert"><input id="steer_invert" name="steer_invert" type="checkbox">invert</label>,
-        <label for="steer_channel_a"><input type="radio" name="steer_channel" id="steer_channel_a" value="a" />A</label>
-        <label for="steer_channel_b"><input type="radio" name="steer_channel" id="steer_channel_b" value="b" checked />B</label>
-        <label for="steer_channel_c"><input type="radio" name="steer_channel" id="steer_channel_c" value="c" />C</label>
-        <br>
-        Return to center <input type="text" id="interval" value="200" disabled>ms
-        <button onclick="inc('interval')" id="inc">+</button><button onclick="dec('interval')" id="dec">-</button>
-        <label for="centering"><input id="centering" name="centering" type="checkbox">enabled</label>
-        <br>
-        <textarea id="terminal" rows="10" cols="40" readonly></textarea>
-      </div>
-      <p id="version">v0.1.9</p>
+    <div class="container">
+        <div class="header"><span id="cc">CIRCUIT </span><span id="cb">CUBES </span><span id="wr">REMOTE</span></div>
+        <div class="left"><button id="left" ontouchstart="steer(1)" ontouchend="steer(0)" onmousedown="steer(1, false)" onmouseup="steer(0, false)">&larr;</button></div>
+        <div class="right"><button id="right" ontouchstart="steer(-1)" ontouchend="steer(0)" onmousedown="steer(-1, false)" onmouseup="steer(0, false)">&rarr;</button></div>
+        <div class="accelerate"><button id="accelerate" ontouchstart="drive(1)" ontouchend="drive(0)" onmousedown="drive(1, false)" onmouseup="drive(0, false)">&uarr;</button></div>
+        <div class="reverse"><button id="reverse" ontouchstart="drive(-1)" ontouchend="drive(0)" onmousedown="drive(-1, false)" onmouseup="drive(0, false)">&darr;</button></div>
+        <div class="bluetooth"><button id="clientConnectButton" onclick="connectionToggle()">Connect</button></div>
+        <div class="settings"><button id="settings" onclick="toggleSettings()">Settings</button></div>
+        <div class="terminal">
+            <div id="settings_container">
+                Drive speed <input type="text" id="drive_speed" value="255" disabled>
+                <button onclick="inc('drive_speed')" id="inc">+</button><button onclick="dec('drive_speed')" id="dec">-</button>
+                <label for="drive_invert"><input id="drive_invert" name="drive_invert" type="checkbox">invert</label>,
+                <label for="drive_channel_a"><input type="radio" name="drive_channel" id="drive_channel_a" value="a" checked />A</label>
+                <label for="drive_channel_b"><input type="radio" name="drive_channel" id="drive_channel_b" value="b" />B</label>
+                <label for="drive_channel_c"><input type="radio" name="drive_channel" id="drive_channel_c" value="c" />C</label>    
+                <br>
+                Steer speed <input type="text" id="steer_speed" value="120" disabled>
+                <button onclick="inc('steer_speed')" id="inc">+</button><button onclick="dec('steer_speed')" id="dec">-</button>
+                <label for="steer_invert"><input id="steer_invert" name="steer_invert" type="checkbox">invert</label>,
+                <label for="steer_channel_a"><input type="radio" name="steer_channel" id="steer_channel_a" value="a" />A</label>
+                <label for="steer_channel_b"><input type="radio" name="steer_channel" id="steer_channel_b" value="b" checked />B</label>
+                <label for="steer_channel_c"><input type="radio" name="steer_channel" id="steer_channel_c" value="c" />C</label>
+                <br>
+                Return to center <label for="centering"><input id="centering" name="centering" type="checkbox">enabled</label>:
+                time <input type="text" id="interval" value="120" disabled>ms
+                <button onclick="inc('interval')" id="inc">+</button><button onclick="dec('interval')" id="dec">-</button>
+                <br>
+                Settings will be saved in cookies, when changed.
+                <br>
+                <textarea id="terminal" rows="10" cols="40" readonly></textarea>
+            </div>
+            <p id="version">v0.1.12</p>
+        </div>
     </div>
-  </div>
 </body>
 </html>

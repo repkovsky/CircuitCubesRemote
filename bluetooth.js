@@ -6,7 +6,6 @@ const bleNusCharTXUUID   = '6e400003-b5a3-f393-e0a9-e50e24dcca9e';
 const MTU = 20;
 
 var bleDevice;
-var bleServer;
 var nusService;
 var rxCharacteristic;
 var txCharacteristic;
@@ -42,9 +41,7 @@ function connect() {
     }
     terminal_writeln('Requesting Bluetooth Device...');
     navigator.bluetooth.requestDevice({
-        //filters: [{services: []}]
-        optionalServices: [bleNusServiceUUID],
-        acceptAllDevices: true
+        filters: [{services: [bleNusServiceUUID]}]
     })
     .then(device => {
         bleDevice = device; 
@@ -136,7 +133,6 @@ function nusSendString(s, log=true) {
             let val = s[i].charCodeAt(0);
             val_arr[i] = val;
         }
-        bleBusy = true;
         sendNextChunk(val_arr);
     } else {
         terminal_writeln('Not connected to a device yet.');
@@ -148,6 +144,7 @@ function sendNextChunk(a) {
     rxCharacteristic.writeValue(chunk)
         .then(function() {
             if (a.length > MTU) {
+                bleBusy = true;
                 sendNextChunk(a.slice(MTU));
             } else {
                 bleBusy = false;
