@@ -2,7 +2,7 @@
 
 const bleLegoHubServiceUUID =         '00001623-1212-efde-1623-785feabcd123';
 const bleLegoHubCharacteristicUUID  = '00001624-1212-efde-1623-785feabcd123';
-const MTU = 20;
+// const MTU = 20;
 
 var bleRemoteDevice;
 var legoService;
