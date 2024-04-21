@@ -5,6 +5,7 @@ body {
     justify-content: space-around;
     height: 100vh;
     user-select: none;
+    margin: 2px 0px 0px 0px; 
 }
 
 .app {
@@ -56,20 +57,22 @@ button {
 button:active {
     filter: brightness(0.7);
 }
-
-/* #left, #right {background-color: #00B8F0;}
-#accelerate, #reverse {background-color: #E1288E;} */
-
 #left, #right, #accelerate, #reverse {
-    font-family: Calibri;
+    font-family: "Inter", Calibri;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 20px;
     text-align: center;
     padding: 8px;
     color: #555;
     width: 45px;
     height: 45px;
+    border: 1px solid;
 }
+
+
+#left, #right {border-color: #00B8F0;  transform: rotate(-90deg)}
+#accelerate, #reverse {border-color: #E1288E;}
+
 
 .actions {
     display: flex;
@@ -103,7 +106,6 @@ button:active {
     padding: 0px 10px 10px 10px;
     text-align: left;
     font-size: 11px;
-    line-height: 20px;
 }
 .group {
     display: flex;
@@ -113,6 +115,9 @@ button:active {
     border: 1px solid lightgrey;
     padding: 5px;
     margin: 2px;
+}
+input {
+    font-size: inherit;
 }
 input:disabled {
     color: black;

@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
-	<meta name="viewport" content="width=device-width, initial-scale=0.95, user-scalable=no">
+	<meta name="viewport" content="width=device-width, initial-scale=0.95">
     <title>CircuitCubesRemote</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=League+Spartan:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="interface.js"></script>
     <script src="ble_nus.js"></script>
@@ -87,10 +89,10 @@
         <div class="controls">
             <div class="control-btns">
                 <div>
-                    <button id="left" ontouchstart="steer(1)" ontouchend="steer(0)" onmousedown="steer(1, false)" onmouseup="steer(0, false)">&larr;</button>
+                    <button id="left" ontouchstart="steer(1)" ontouchend="steer(0)" onmousedown="steer(1, false)" onmouseup="steer(0, false)">&uarr;</button>
                 </div>
                 <div>
-                    <button id="right" ontouchstart="steer(-1)" ontouchend="steer(0)" onmousedown="steer(-1, false)" onmouseup="steer(0, false)">&rarr;</button>
+                    <button id="right" ontouchstart="steer(-1)" ontouchend="steer(0)" onmousedown="steer(-1, false)" onmouseup="steer(0, false)">&darr;</button>
                 </div>
             </div>
             <div class="control-btns" style="flex-direction: column;">
@@ -145,7 +147,7 @@
             Return to center steering:
             <div class="group">
                 <div class="set">
-                    <label for="centering"><input id="centering" name="centering" type="checkbox">Enabled</label>
+                    <label for="centering"><input id="centering" name="centering" type="checkbox" checked>Enabled</label>
                 </div>
                 <div class="set">
                     Return time: <input type="text" id="interval" value="100" disabled>ms

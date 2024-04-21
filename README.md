@@ -1,18 +1,18 @@
 # CircuitCubesRemote
 
-CircuitCubeRemote is [browser application](https://github.com/repkovsky/CircuitCubeRemote) for remote control of [Circuit Cubes](https://circuitcubes.com) Bluetooth Battery Cube and two motors as steering and drive of a vehicle. Communication is implemented using Web Bluetooth API and Nordic UART. 
+CircuitCubesRemote is [browser application](https://repkovsky.github.io/CircuitCubesRemote) for remote control of [Circuit Cubes](https://circuitcubes.com) Bluetooth Battery Cube and two motors as steering and drive of a vehicle. Additionally, [LEGO 88010 Remote](https://www.lego.com/pl-pl/product/remote-control-88010) can be connected to the application and used as a physical controller. Bluetooth communication is implemented using Web Bluetooth API, with Nordic UART protocol for CircuitCubes and [LEGO Wireless Protocol](https://lego.github.io/lego-ble-wireless-protocol-docs) for LEGO Remote. 
 
 ## Configuration
 
 For steer and drive motors you can configure separately:
-* speed (0-250)
+* speed (0-255)
     * for steering motor high speed makes it hard to control position precisely
     * lowering speed reduces torque
     * speeds below 80 may result in no motion at all
 * rotation inversion (depending on how the motors and battery were connected, change of direction of rotation may be required)
 * choice of channels (A, B, C) for driving motor and steering motor
 
-With _Return to center_ enabled, after one of steering buttons is pressed and then released, the steering motor rotates with the same speed in the opposite direction for the configured time interval. If button is pressed shorter then return time will be similar to the pressing time. Due to inaccuracies in timing in JavaScript, Bluetooth transmission and in Bluetooth Battery Cube, actual times may differ by approx. ~20ms. Resulting inaccuracy of motor rotation angle increases with rotation speed.
+With _Return to center steering_ enabled, after one of steering buttons is pressed and then released, the steering motor rotates with the same speed in the opposite direction for the configured time interval. If button press time is shorter than configured time, then return time will be similar to the press time. Due to inaccuracies in timing in JavaScript, Bluetooth transmission and in Bluetooth Battery Cube, actual times may differ by approx. ~20ms. Resulting inaccuracy of motor rotation angle increases with rotation speed.
 
 ## Protocol
 
