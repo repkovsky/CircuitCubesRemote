@@ -30,12 +30,21 @@ function dec(id, by=5){
     input.onchange();
 }
 
-function toggleSettings(){
-    let settings_container = document.getElementById("settings_container");
-    if (settings_container.style.display === "block") {
-        settings_container.style.display = "none";
+function toggleTerminal(){
+    let terminal = document.getElementById("terminal");
+    if (terminal.style.display === "block") {
+        terminal.style.display = "none";
     } else {
-        settings_container.style.display = "block";
+        terminal.style.display = "block";
+    }
+}
+
+function toggleSettings(){
+    let settings = document.getElementById("settings");
+    if (settings.style.display === "block") {
+        settings.style.display = "none";
+    } else {
+        settings.style.display = "block";
     }
 }
 
@@ -83,6 +92,9 @@ function onSetup(){
 }
 
 function onLoad(){
+    if (!isChrome()) {
+        window.alert("Only Chrome browser is supported.")
+    }
     checkboxes.forEach(id => {
         let value = getCookie(COOKIE_PREFIX + id);
         const input = document.getElementById(id);
@@ -108,4 +120,28 @@ function onLoad(){
             input.onchange = onSetup;
         });
     });
+}
+
+
+function isChrome(){
+	var isChromium = window.chrome;
+	var winNav = window.navigator;
+	var vendorName = winNav.vendor;
+	var isOpera = typeof window.opr !== "undefined";
+	var isIEedge = winNav.userAgent.indexOf("Edg") > -1;
+	var isIOSChrome = winNav.userAgent.match("CriOS");
+
+	if (isIOSChrome) {
+		return true;
+	} else if(
+	isChromium !== null &&
+	typeof isChromium !== "undefined" &&
+	vendorName === "Google Inc." &&
+	isOpera === false &&
+	isIEedge === false
+	) {
+		return true;
+	} else { 
+		return false;
+	}
 }

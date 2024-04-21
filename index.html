@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CircuitCubeRemote</title>
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+	<meta name="viewport" content="width=device-width, initial-scale=0.95, user-scalable=no">
+    <title>CircuitCubesRemote</title>
     <link rel="stylesheet" href="style.css">
     <script src="interface.js"></script>
     <script src="ble_nus.js"></script>
@@ -75,43 +76,87 @@
         handlers["onrightminuspress"] = () => drive(-1);
         handlers["onrightrelease"] = () => drive(0);
     </script>
+    <style>
+    </style>
 </head>
 <body onload="onLoad()">
-    <div class="container">
-        <div class="header"><span id="cc">CIRCUIT </span><span id="cb">CUBES </span><span id="wr">REMOTE</span></div>
-        <div class="left"><button id="left" ontouchstart="steer(1)" ontouchend="steer(0)" onmousedown="steer(1, false)" onmouseup="steer(0, false)">&larr;</button></div>
-        <div class="right"><button id="right" ontouchstart="steer(-1)" ontouchend="steer(0)" onmousedown="steer(-1, false)" onmouseup="steer(0, false)">&rarr;</button></div>
-        <div class="accelerate"><button id="accelerate" ontouchstart="drive(1)" ontouchend="drive(0)" onmousedown="drive(1, false)" onmouseup="drive(0, false)">&uarr;</button></div>
-        <div class="reverse"><button id="reverse" ontouchstart="drive(-1)" ontouchend="drive(0)" onmousedown="drive(-1, false)" onmouseup="drive(0, false)">&darr;</button></div>
-        <div class="bluetooth"><button id="clientConnectButton" onclick="connectionToggle()">Connect</button></div>
-        <div class="settings"><button id="settings" onclick="toggleSettings()">Settings</button></div>
-        <div class="terminal">
-            <div id="settings_container">
-                Drive speed <input type="text" id="drive_speed" value="255" disabled>
-                <button onclick="inc('drive_speed')" id="inc">+</button><button onclick="dec('drive_speed')" id="dec">-</button>
-                <label for="drive_invert"><input id="drive_invert" name="drive_invert" type="checkbox">invert</label>,
-                <label for="drive_channel_a"><input type="radio" name="drive_channel" id="drive_channel_a" value="a" checked />A</label>
-                <label for="drive_channel_b"><input type="radio" name="drive_channel" id="drive_channel_b" value="b" />B</label>
-                <label for="drive_channel_c"><input type="radio" name="drive_channel" id="drive_channel_c" value="c" />C</label>    
-                <br>
-                Steer speed <input type="text" id="steer_speed" value="120" disabled>
-                <button onclick="inc('steer_speed')" id="inc">+</button><button onclick="dec('steer_speed')" id="dec">-</button>
-                <label for="steer_invert"><input id="steer_invert" name="steer_invert" type="checkbox">invert</label>,
-                <label for="steer_channel_a"><input type="radio" name="steer_channel" id="steer_channel_a" value="a" />A</label>
-                <label for="steer_channel_b"><input type="radio" name="steer_channel" id="steer_channel_b" value="b" checked />B</label>
-                <label for="steer_channel_c"><input type="radio" name="steer_channel" id="steer_channel_c" value="c" />C</label>
-                <br>
-                Return to center <label for="centering"><input id="centering" name="centering" type="checkbox">enabled</label>:
-                time <input type="text" id="interval" value="100" disabled>ms
-                <button onclick="inc('interval')" id="inc">+</button><button onclick="dec('interval')" id="dec">-</button>
-                <br>
-                Settings will be saved in cookies, when changed.
-                <br>
-                <textarea id="terminal" rows="10" cols="40" readonly></textarea>
-                <br>
-                <button id="remoteConnectButton" onclick="remoteConnectionToggle()">Connect Remote</button>
+    <div class="app">
+        <div class="title-container">
+            <span id="cc">CIRCUIT</span><span id="cb">CUBES</span><span id="wr">REMOTE</span>
+        </div>
+        <div class="controls">
+            <div class="control-btns">
+                <div>
+                    <button id="left" ontouchstart="steer(1)" ontouchend="steer(0)" onmousedown="steer(1, false)" onmouseup="steer(0, false)">&larr;</button>
+                </div>
+                <div>
+                    <button id="right" ontouchstart="steer(-1)" ontouchend="steer(0)" onmousedown="steer(-1, false)" onmouseup="steer(0, false)">&rarr;</button>
+                </div>
             </div>
-            <p id="version">v0.2.0</p>
+            <div class="control-btns" style="flex-direction: column;">
+                <div>
+                    <button id="accelerate" ontouchstart="drive(1)" ontouchend="drive(0)" onmousedown="drive(1, false)" onmouseup="drive(0, false)">&uarr;</button>
+                </div>
+                <div>
+                    <button id="reverse" ontouchstart="drive(-1)" ontouchend="drive(0)" onmousedown="drive(-1, false)" onmouseup="drive(0, false)">&darr;</button>
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div><button id="clientConnectButton" onclick="connectionToggle()">Connect</button></div>
+            <div><button id="remoteConnectButton" onclick="remoteConnectionToggle()">Connect</button></div>
+            <div><button id="settingsButton" onclick="toggleSettings()">Settings</button></div>
+        </div>
+        <div id="settings">
+            Settings will be saved in cookies, when changed.
+            <br>
+            Drive:
+            <div class="group">
+                <div class="set">
+                    Speed: <input type="text" id="drive_speed" value="255" disabled>
+                    <button onclick="inc('drive_speed')" id="inc">+</button><button onclick="dec('drive_speed')" id="dec">-</button>
+                </div>
+                <div class="set">
+                    <label for="drive_invert"><input id="drive_invert" name="drive_invert" type="checkbox">Revert</label>
+                </div>
+                <div class="set">
+                    Channel:
+                    <label for="drive_channel_a"><input type="radio" name="drive_channel" id="drive_channel_a" value="a" checked />A</label>
+                    <label for="drive_channel_b"><input type="radio" name="drive_channel" id="drive_channel_b" value="b" />B</label>
+                    <label for="drive_channel_c"><input type="radio" name="drive_channel" id="drive_channel_c" value="c" />C</label> 
+                </div>   
+            </div>
+            Steering:
+            <div class="group">
+                <div class="set">
+                    Speed: <input type="text" id="steer_speed" value="120" disabled>
+                    <button onclick="inc('steer_speed')" id="inc">+</button><button onclick="dec('steer_speed')" id="dec">-</button>
+                </div>
+                <div class="set">
+                    <label for="steer_invert"><input id="steer_invert" name="steer_invert" type="checkbox">Revert</label>
+                </div>
+                <div class="set">
+                    Channel:
+                    <label for="steer_channel_a"><input type="radio" name="steer_channel" id="steer_channel_a" value="a" />A</label>
+                    <label for="steer_channel_b"><input type="radio" name="steer_channel" id="steer_channel_b" value="b" checked />B</label>
+                    <label for="steer_channel_c"><input type="radio" name="steer_channel" id="steer_channel_c" value="c" />C</label>
+                </div>  
+            </div>
+            Return to center steering:
+            <div class="group">
+                <div class="set">
+                    <label for="centering"><input id="centering" name="centering" type="checkbox">Enabled</label>
+                </div>
+                <div class="set">
+                    Return time: <input type="text" id="interval" value="100" disabled>ms
+                    <button onclick="inc('interval')" id="inc">+</button><button onclick="dec('interval')" id="dec">-</button>
+                </div> 
+                <button class="set" onclick="toggleTerminal()">Console</button>
+            </div>
+            <textarea id="terminal" rows="10" cols="50" readonly></textarea>
+        </div>
+        <div class="about">
+            v0.2.0 | <a href="https://github.com/repkovsky/CircuitCubesRemote">About</a>
         </div>
     </div>
 </body>

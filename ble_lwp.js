@@ -33,10 +33,13 @@ function remoteConnectionToggle() {
 // Sets button to either Connect or Disconnect
 function changeRemoteConnectionState(state) {
     remoteConnected = state;
+    let button = document.getElementById("remoteConnectButton")
     if (state) {
-        document.getElementById("remoteConnectButton").innerHTML = "Disconnect Remote";
+        button.innerHTML = "Disconnect";
+        button.classList.add("connected");
     } else {
-        document.getElementById("remoteConnectButton").innerHTML = "Connect Remote";
+        button.innerHTML = "Connect";
+        button.classList.remove("connected");
     }
 }
 

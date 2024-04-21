@@ -1,4 +1,4 @@
-# CircuitCubeRemote
+# CircuitCubesRemote
 
 CircuitCubeRemote is [browser application](https://github.com/repkovsky/CircuitCubeRemote) for remote control of [Circuit Cubes](https://circuitcubes.com) Bluetooth Battery Cube and two motors as steering and drive of a vehicle. Communication is implemented using Web Bluetooth API and Nordic UART. 
 

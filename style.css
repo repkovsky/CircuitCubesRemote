@@ -1,133 +1,153 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-align: center;
-    margin: 20px;
     display: flex;
     justify-content: space-around;
-    align-items: center;
     height: 100vh;
     user-select: none;
 }
 
-.left-right-buttons, .accelerate-reverse-buttons {
+.app {
+    margin: auto;
+    width: 375px;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 0px 3px 5px 1px #DDD;
+}
+
+.title-container {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
+    padding: 10px;
+    font-size: 25px;
+    font-weight: bold;
+    border-bottom: 1px solid #DDD;
+}
+span {padding-right: 8px;}
+#cc {color:#00B8F0}
+#cb {color: #E1288E}
+#wr {color: #939498}
+
+
+.controls {
+    display: flex;
+    border-bottom: 1px solid #DDD;
+}
+.control-btns {
+    display: flex;
+    width: 50%; 
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+    border-radius: 20px;
+    border: 1px solid lightgrey;
 }
 
 button {
-    font-size: 18px;
-    padding: 10px 20px;
     margin: 10px;
     cursor: pointer;
     border: none;
     border-radius: 5px;
     transition: filter 0.3s;
+    box-shadow: 0px 1px 4px 0px #AAA;
 }
 
 button:active {
     filter: brightness(0.7);
 }
 
-input:disabled {
-    color: black;
-}
-
-#steer_speed, #drive_speed, #interval {
-    font-size: 12px;
-    width: 20px;
-    border: none;
-    text-align: right;
-}
-
-label {
-    width: 5px;
-    padding: 0px;
-}
-
-span {
-    font-size: 25px;
-    font-weight: bold;
-}
-
-#cc {
-    color:#00B8F0
-}
-
-#cb {
-    color: #E1288E
-}
-
-#wr {
-    color: #939498
-}
-
-#settings_container {
-    display: none;
-    text-align: left;
-    font-size: 12px;
-}
-
-#version {
-    font-size: 10px;
-}
-
-#clientConnectButton {
-    background-color: #3498db;
-    color: #fff;
-}
-
-#left, #right {
-    background-color: #ffbf00;
-}
-
-#accelerate, #reverse {
-    background-color: #2ecc71;
-}
+/* #left, #right {background-color: #00B8F0;}
+#accelerate, #reverse {background-color: #E1288E;} */
 
 #left, #right, #accelerate, #reverse {
     font-family: Calibri;
     font-weight: bold;
     font-size: 18px;
-    width: 50px;
     text-align: center;
     padding: 8px;
-    color: #fff;
+    color: #555;
+    width: 45px;
+    height: 45px;
 }
 
+.actions {
+    display: flex;
+    padding: 10px;
+}
+.actions button {
+    font-size: 11px;
+    width: 100px;
+    padding: 10px 10px 10px 40px;
+    text-align: center;
+    background-position: left 10% bottom 65%;
+    background-repeat: no-repeat;
+}
+#clientConnectButton {
+    background-image:url(./images/circuit_cubes_bluetooth_28.png);
+}
+#remoteConnectButton {
+    background-image:url(./images/lego_remote_28.png);
+}
+#settingsButton {
+    background-image:url(./images/gear_28.png);
+}
+.connected {
+    color: white;
+    background-color: #3498db;
+}
+
+
+#settings {
+    display: none;
+    padding: 0px 10px 10px 10px;
+    text-align: left;
+    font-size: 11px;
+    line-height: 20px;
+}
+.group {
+    display: flex;
+}
+.set {
+    border-radius: 10px;
+    border: 1px solid lightgrey;
+    padding: 5px;
+    margin: 2px;
+}
+input:disabled {
+    color: black;
+}
+#steer_speed, #drive_speed, #interval {
+    width: 20px;
+    border: none;
+    text-align: right;
+}
 #inc, #dec {
-    font-size: 12px;
-    padding: 2px;
     margin: 1px;
     border: 1px solid #3498db;
-    width: 15px;
+    width: 20px;
+    height: 20px;
+}
+#terminal {
+    display: none;
 }
 
-.container {
-    display: grid; 
-    grid-template-columns: 0.5fr 0.5fr 1fr; 
-    grid-template-rows: 0.5fr 0.5fr 0.5fr 0.5fr 2fr; 
-    gap: 0px 0px; 
-    grid-template-areas:
-      "header header header"
-      "left right accelerate"
-      "left right reverse"
-      "bluetooth bluetooth settings" 
-      "terminal terminal terminal"; 
-  }
 
-.header { grid-area: header; }
+.about {
+    padding: 5px;
+    font-size: 10px;
+    border-top: 1px solid #DDD;
+}
 
-.bluetooth { grid-area: bluetooth; }
-
-.values { grid-area: values; text-align: left; margin: auto;}
-  
-.left { grid-area: left; margin: auto;}
-
-.right { grid-area: right; margin: auto;}
-
-.accelerate { grid-area: accelerate; }
-
-.reverse { grid-area: reverse; }
-
-.terminal { grid-area: terminal; }  
+a {
+    color: inherit;
+}
+a:link  {
+    text-decoration: none;
+}
+a:hover  {
+    text-decoration: underline;
+}
+a:visited {
+    color: inherit;
+}

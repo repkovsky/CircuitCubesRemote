@@ -24,10 +24,13 @@ function connectionToggle() {
 // Sets button to either Connect or Disconnect
 function changeConnectionState(state) {
     connected = state;
+    let button = document.getElementById("clientConnectButton")
     if (state) {
-        document.getElementById("clientConnectButton").innerHTML = "Disconnect";
+        button.innerHTML = "Disconnect";
+        button.classList.add("connected");
     } else {
-        document.getElementById("clientConnectButton").innerHTML = "Connect";
+        button.innerHTML = "Connect";
+        button.classList.remove("connected");
     }
 }
 
