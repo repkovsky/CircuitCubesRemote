@@ -18,16 +18,15 @@ With _Return to center_ enabled, after one of steering buttons is pressed and th
 
 Bluetooth Battery Cube recognizes commands sent by Nordic UART in format `dNNNc` where:
 * `d` - direction of rotation: `+` or `-`
-* `NNN` - speed of rotation with leading zeros in range 0-250. Values greater than 250 are not recognized.
+* `NNN` - speed of rotation with leading zeros in range 0-255. Values greater than 255 are not recognized.
 * `c` - output channel in Bluetooth Battery Cube: `a`, `b`, `c`
 
 Examples: `+123a`, `-009b`, `+000c` 
 
 
-
 # Other implementations of Circuit Cubes Bluetooth communication 
 
-* C++: https://github.com/asperka/LEGORemoteCircuitCube
+* C: controlling CircuitCube with LEGO Remote using M5Atom as hub https://github.com/asperka/LEGORemoteCircuitCube
 * Java: https://github.com/kvp-git/traindriver
 * Python: 
     * https://github.com/blockninja124/Circuit-Cube-Python

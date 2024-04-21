@@ -6,7 +6,8 @@
     <title>CircuitCubeRemote</title>
     <link rel="stylesheet" href="style.css">
     <script src="interface.js"></script>
-    <script src="bluetooth.js"></script>
+    <script src="ble_nus.js"></script>
+    <script src="ble_lwp.js"></script>
     <script>
         var pressTime = 0;
         var lastDirection = 0;
@@ -66,6 +67,13 @@
         function getInversion(id){
             return (document.getElementById(id).checked) ? -1 : 1;
         }
+
+        handlers["onleftpluspress"] = () => steer(1);
+        handlers["onleftminuspress"] = () => steer(-1);
+        handlers["onleftrelease"] = () => steer(0);
+        handlers["onrightpluspress"] = () => drive(1);
+        handlers["onrightminuspress"] = () => drive(-1);
+        handlers["onrightrelease"] = () => drive(0);
     </script>
 </head>
 <body onload="onLoad()">
@@ -94,14 +102,16 @@
                 <label for="steer_channel_c"><input type="radio" name="steer_channel" id="steer_channel_c" value="c" />C</label>
                 <br>
                 Return to center <label for="centering"><input id="centering" name="centering" type="checkbox">enabled</label>:
-                time <input type="text" id="interval" value="120" disabled>ms
+                time <input type="text" id="interval" value="100" disabled>ms
                 <button onclick="inc('interval')" id="inc">+</button><button onclick="dec('interval')" id="dec">-</button>
                 <br>
                 Settings will be saved in cookies, when changed.
                 <br>
                 <textarea id="terminal" rows="10" cols="40" readonly></textarea>
+                <br>
+                <button id="remoteConnectButton" onclick="remoteConnectionToggle()">Connect Remote</button>
             </div>
-            <p id="version">v0.1.12</p>
+            <p id="version">v0.2.0</p>
         </div>
     </div>
 </body>
