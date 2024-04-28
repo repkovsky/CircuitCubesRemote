@@ -1,3 +1,7 @@
+html {
+    background-color: #e8eaed;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-align: center;
@@ -6,6 +10,7 @@ body {
     height: 100vh;
     user-select: none;
     margin: 2px 0px 0px 0px; 
+    background-color: #e8eaed;
 }
 
 .app {
@@ -21,7 +26,7 @@ body {
     justify-content: center;
     align-items: center;
     padding: 10px;
-    font-size: 25px;
+    font-size: 22px;
     font-weight: bold;
     border-bottom: 1px solid #DDD;
 }
@@ -34,13 +39,14 @@ span {padding-right: 8px;}
 .controls {
     display: flex;
     border-bottom: 1px solid #DDD;
+    padding: 10px 10px 10px 0px;
 }
 .control-btns {
     display: flex;
     width: 50%; 
     justify-content: center;
     align-items: center;
-    margin: 20px;
+    margin-left: 10px;
     border-radius: 20px;
     border: 1px solid lightgrey;
 }
@@ -60,17 +66,17 @@ button:active {
 #left, #right, #accelerate, #reverse {
     font-family: "Inter", Calibri;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 25px;
     text-align: center;
     padding: 8px;
     color: #555;
-    width: 45px;
-    height: 45px;
+    width: 65px;
+    height: 65px;
     border: 1px solid;
 }
 
 
-#left, #right {border-color: #00B8F0;  transform: rotate(-90deg)}
+#left, #right {border-color: #00B8F0; transform: rotate(-90deg)}
 #accelerate, #reverse {border-color: #E1288E;}
 
 

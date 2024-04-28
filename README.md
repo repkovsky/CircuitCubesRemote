@@ -24,10 +24,10 @@ Bluetooth Battery Cube recognizes commands sent by Nordic UART in format `dNNNc`
 Examples: `+123a`, `-009b`, `+000c` 
 
 
-# Other implementations of Circuit Cubes Bluetooth communication 
+## Other open-source Circuit Cubes resources
 
-* C: controlling CircuitCube with LEGO Remote using M5Atom as hub https://github.com/asperka/LEGORemoteCircuitCube
-* Java: https://github.com/kvp-git/traindriver
+* C: controlling Circuit Cubes with LEGO Remote using M5Atom as hub https://github.com/asperka/LEGORemoteCircuitCube
+* Java: Android train controller app https://github.com/kvp-git/traindriver
 * Python: 
-    * https://github.com/blockninja124/Circuit-Cube-Python
-    * https://github.com/dsobotta/mqtt-circuit-cubes
+    * Beginner friendly code for controlling Circuit Cubes https://github.com/blockninja124/Circuit-Cube-Python
+    * Train controller using MQTT protocol https://github.com/dsobotta/mqtt-circuit-cubes

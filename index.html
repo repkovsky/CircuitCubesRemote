@@ -29,11 +29,13 @@
                 const centering = document.getElementById("centering").checked;
                 const elapsed = performance.now() - pressTime;
                 terminal_writeln("steer pressed for " + parseInt(elapsed) + "ms");
-                if (centering) {
+                if (centering && lastDirection) {
                     const interval = getValue("interval");
                     run_motor(-lastDirection, "steer");
                     await delay(Math.min(interval, elapsed));
                     run_motor(0, "steer");
+                    //avoid calling return to center more than once per steering key press (due to accidental press&release of left stop button)
+                    lastDirection = 0;
                     terminal_writeln("returned to center for " + parseInt(performance.now() - pressTime - elapsed) + "ms");
                 } else {
                     run_motor(0, "steer");
@@ -131,7 +133,7 @@
             Steering:
             <div class="group">
                 <div class="set">
-                    Speed: <input type="text" id="steer_speed" value="120" disabled>
+                    Speed: <input type="text" id="steer_speed" value="125" disabled>
                     <button onclick="inc('steer_speed')" id="inc">+</button><button onclick="dec('steer_speed')" id="dec">-</button>
                 </div>
                 <div class="set">
@@ -150,7 +152,7 @@
                     <label for="centering"><input id="centering" name="centering" type="checkbox" checked>Enabled</label>
                 </div>
                 <div class="set">
-                    Return time: <input type="text" id="interval" value="100" disabled>ms
+                    Return time: <input type="text" id="interval" value="90" disabled>ms
                     <button onclick="inc('interval')" id="inc">+</button><button onclick="dec('interval')" id="dec">-</button>
                 </div> 
                 <button class="set" onclick="toggleTerminal()">Console</button>
@@ -158,7 +160,7 @@
             <textarea id="terminal" rows="10" cols="50" readonly></textarea>
         </div>
         <div class="about">
-            v0.2.1 | <a href="https://github.com/repkovsky/CircuitCubesRemote">About</a>
+            v0.2.2 | <a href="https://github.com/repkovsky/CircuitCubesRemote">About</a>
         </div>
     </div>
 </body>

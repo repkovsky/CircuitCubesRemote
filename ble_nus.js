@@ -28,9 +28,11 @@ function changeConnectionState(state) {
     if (state) {
         button.innerHTML = "Disconnect";
         button.classList.add("connected");
+        document.body.requestFullscreen();
     } else {
         button.innerHTML = "Connect";
         button.classList.remove("connected");
+        document.exitFullscreen();
     }
 }
 
