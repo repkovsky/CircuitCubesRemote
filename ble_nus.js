@@ -28,7 +28,7 @@ function changeConnectionState(state) {
     if (state) {
         button.innerHTML = "Disconnect";
         button.classList.add("connected");
-        document.body.requestFullscreen();
+        openFullscreen(document.body);
     } else {
         button.innerHTML = "Connect";
         button.classList.remove("connected");
@@ -37,11 +37,9 @@ function changeConnectionState(state) {
 }
 
 function connect() {
-    if (!navigator.bluetooth) {
-        terminal_writeln('WebBluetooth API is not available.\r\n' +
-                    'Please make sure the Web Bluetooth flag is enabled.');
+    if (!checkBluetooth()) {
         terminal_writeln('WebBluetooth API is not available on your browser.\r\n' +
-                    'Please make sure the Web Bluetooth flag is enabled.');
+                         'Please make sure the Web Bluetooth flag is enabled.');
         return;
     }
     terminal_writeln('Requesting Bluetooth Device...');

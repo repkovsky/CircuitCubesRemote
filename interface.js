@@ -4,6 +4,17 @@ const radiobuttons =  ["steer_channel", "drive_channel"];
 const COOKIE_EXT_DAYS = 364;
 const COOKIE_PREFIX = "circuit_cube_";
 
+function enableSleepLock(){
+    // playing video avoids disabling screen and limiting activity of browser, which spoils Bluetooth communication
+    let video = document.getElementById('sleep_lock');
+    video.play();
+}
+
+function disableSleepLock(){
+    let video = document.getElementById('sleep_lock');
+    video.pause();
+}
+
 function delay(time) {
     return new Promise(resolve => setTimeout(resolve, time));
 }
@@ -57,6 +68,16 @@ function alreadyTouched(touch){
     return false;
 }
 
+function openFullscreen(elem) {
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) { /* Safari */
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { /* IE11 */
+        elem.msRequestFullscreen();
+    }
+}
+
 function setCookie(cname, cvalue) {
     const d = new Date();
     d.setTime(d.getTime() + (COOKIE_EXT_DAYS * 24 * 60 * 60 * 1000));
@@ -91,10 +112,17 @@ function onSetup(){
     });
 }
 
-function onLoad(){
-    if (!isChrome()) {
-        window.alert("Only Chrome browser is supported.")
+function checkBluetooth() {
+    if (!navigator.bluetooth) {
+        window.alert("WebBluetooth is not available on your browser! Connection with Circuit Cubes or Lego remote is not possible. Use Chrome for Android or Bluefy for iOS")
+        return false
+    } else {
+        return true
     }
+}
+
+function onLoad(){
+    checkBluetooth();
     checkboxes.forEach(id => {
         let value = getCookie(COOKIE_PREFIX + id);
         const input = document.getElementById(id);
@@ -120,28 +148,4 @@ function onLoad(){
             input.onchange = onSetup;
         });
     });
-}
-
-
-function isChrome(){
-	var isChromium = window.chrome;
-	var winNav = window.navigator;
-	var vendorName = winNav.vendor;
-	var isOpera = typeof window.opr !== "undefined";
-	var isIEedge = winNav.userAgent.indexOf("Edg") > -1;
-	var isIOSChrome = winNav.userAgent.match("CriOS");
-
-	if (isIOSChrome) {
-		return true;
-	} else if(
-	isChromium !== null &&
-	typeof isChromium !== "undefined" &&
-	vendorName === "Google Inc." &&
-	isOpera === false &&
-	isIEedge === false
-	) {
-		return true;
-	} else { 
-		return false;
-	}
 }

@@ -37,17 +37,17 @@ function changeRemoteConnectionState(state) {
     if (state) {
         button.innerHTML = "Disconnect";
         button.classList.add("connected");
+        enableSleepLock();
     } else {
         button.innerHTML = "Connect";
         button.classList.remove("connected");
+        disableSleepLock();
     }
 }
 
 function remoteConnect() {
-    if (!navigator.bluetooth) {
+    if (!checkBluetooth()) {
         terminal_writeln('WebBluetooth API is not available.\r\n' +
-                    'Please make sure the Web Bluetooth flag is enabled.');
-        terminal_writeln('WebBluetooth API is not available on your browser.\r\n' +
                     'Please make sure the Web Bluetooth flag is enabled.');
         return;
     }
